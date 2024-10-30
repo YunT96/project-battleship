@@ -1,6 +1,11 @@
 import "./styles.css";
+import gameController from "./modules/gameController";
 
-import Gameboard from "./gameboard";
-
-const gameboard = new Gameboard();
-gameboard.createBoard();
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".gameboards-container");
+  if (!container) {
+    console.error("Game container not found!");
+    return;
+  }
+  gameController.initializeGame();
+});

@@ -3,3 +3,66 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* Container for message and gameboards */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  gap: 2rem;
+}
+
+/* Center the message display */
+.message-display {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* Centered container for gameboards */
+.gameboards-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+}
+
+/* Gameboard styling */
+#player-gameboard,
+#opponent-gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Cell styling */
+.cell {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#opponent-gameboard .cell:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+/* Cell states */
+.cell.ship {
+  background-color: #7ca6e6;
+}
+.cell.hit {
+  background-color: #ff4444;
+}
+.cell.miss {
+  background-color: #98999b;
+}
