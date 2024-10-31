@@ -7,7 +7,7 @@ export default class Gameboard {
   createBoard() {
     this.board = [];
     for (let i = 0; i < 10; i++) {
-      this.board[i] = new Array(10).fill(0); // Creates an array of 10 elements, all set to 0
+      this.board[i] = new Array(10).fill(null); // Use null instead of 0 for empty cells
     }
   }
 
@@ -64,26 +64,61 @@ export default class Gameboard {
   placeShip(ship, coordinates) {
     coordinates.forEach((coordinate) => {
       const [x, y] = coordinate;
-      this.board[x][y] = 1;
+      // Store an object containing the ship reference and hit status
+      this.board[x][y] = {
+        ship,
+        isHit: false,
+      };
     });
   }
 
   receiveAttack(coordinate) {
     const [x, y] = coordinate;
-    if (this.board[x][y] === 1) {
-      this.board[x][y] = 2;
+    const cell = this.board[x][y];
+
+    if (cell && cell.ship) {
+      cell.isHit = true;
+      cell.ship.isHit(); // Increment hits on the ship
       return true;
     }
 
+    // Mark as missed (-1)
     this.board[x][y] = -1;
     return false;
   }
 
   getBoardState() {
-    return this.board;
+    // Convert the board state to numbers for display
+    return this.board.map((row) =>
+      row.map((cell) => {
+        if (cell === null) return 0; // Empty cell
+        if (cell === -1) return -1; // Missed shot
+        if (cell && cell.ship) {
+          return cell.isHit ? 2 : 1; // 2 for hit ship, 1 for unhit ship
+        }
+        return 0; // Default case
+      }),
+    );
   }
 
   gameOver() {
-    return this.board.every((row) => row.every((cell) => cell !== 1));
+    // Check if all ship cells are hit
+    for (const row of this.board) {
+      for (const cell of row) {
+        if (cell && cell.ship && !cell.isHit) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  getShipAt(coordinates) {
+    const [x, y] = coordinates;
+    const cell = this.board[x][y];
+    if (cell && cell.ship) {
+      return cell.ship;
+    }
+    return null;
   }
 }

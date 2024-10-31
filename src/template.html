@@ -8,16 +8,22 @@
 
   <body>
     <div class="main-container">
-      <div class="message-display">Place your ships</div>
+      <div class="message-display"></div>
       <div class="gameboards-container">
         <div class="board-wrapper">
           <div class="board-label">Your Board</div>
+          <div id="player-score">Ships Remaining:</div>
           <div id="player-gameboard"></div>
         </div>
         <div class="board-wrapper">
           <div class="board-label">Opponent's Board</div>
+          <div id="opponent-score">Ships Remaining:</div>
           <div id="opponent-gameboard"></div>
         </div>
+      </div>
+
+      <div class="button-wrapper">
+        <button id="reset-button">reset game</button>
       </div>
     </div>
   </body>

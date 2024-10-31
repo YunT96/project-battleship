@@ -9,6 +9,8 @@ const gameController = (() => {
   let computer;
   let isGameOver = false;
   let currentTurn = "player";
+  let playerShips = 5;
+  let computerShips = 5;
 
   const initializeGame = () => {
     // Create players
@@ -28,6 +30,9 @@ const gameController = (() => {
       player.gameboard.getBoardState(),
       computer.gameboard.getBoardState(),
     );
+
+    // Update the score
+    domManager.updateScore(playerShips, computerShips);
 
     // Add click handler for attacks
     domManager.addAttackHandler(handlePlayerAttack);
@@ -93,6 +98,7 @@ const gameController = (() => {
       return;
     }
 
+    const attackedCell = computer.gameboard.board[x][y]; // Get cell before attack
     const isHit = computer.gameboard.receiveAttack([x, y]);
 
     // Update the boards
@@ -102,16 +108,25 @@ const gameController = (() => {
     );
 
     if (isHit) {
-      domManager.displayMessage("Hit! Computer's turn.");
+      // Get the ship from the attacked cell
+      const ship = attackedCell?.ship;
+
+      if (ship && ship.isShipSunk) {
+        domManager.displayMessage("You sunk a ship! Computer's turn.");
+        computerShips--;
+        domManager.updateScore(playerShips, computerShips);
+      } else {
+        domManager.displayMessage("Hit! Computer's turn.");
+      }
+
       if (computer.gameboard.gameOver()) {
         endGame("player");
         return;
       }
     } else {
-      domManager.displayMessage("Miss! Computer's turn.");
+      domManager.displayMessage("You missed! Computer's turn.");
     }
 
-    // Switch to computer's turn regardless of hit or miss
     currentTurn = "computer";
     setTimeout(handleComputerTurn, 2000);
   };
@@ -132,6 +147,7 @@ const gameController = (() => {
       }
     }
 
+    const attackedCell = player.gameboard.board[x][y]; // Get cell before attack
     const isHit = player.gameboard.receiveAttack([x, y]);
 
     // Update the boards
@@ -141,7 +157,16 @@ const gameController = (() => {
     );
 
     if (isHit) {
-      domManager.displayMessage("Computer hit your ship! Your turn.");
+      const ship = attackedCell?.ship;
+
+      if (ship && ship.isShipSunk) {
+        domManager.displayMessage("Computer sunk your ship! Your turn.");
+        playerShips--;
+        domManager.updateScore(playerShips, computerShips);
+      } else {
+        domManager.displayMessage("Computer hit your ship! Your turn.");
+      }
+
       if (player.gameboard.gameOver()) {
         endGame("computer");
         return;
@@ -150,7 +175,6 @@ const gameController = (() => {
       domManager.displayMessage("Computer missed! Your turn.");
     }
 
-    // Switch to player's turn regardless of hit or miss
     currentTurn = "player";
   };
 
@@ -162,6 +186,9 @@ const gameController = (() => {
   const resetGame = () => {
     isGameOver = false;
     currentTurn = "player";
+    playerShips = 5;
+    computerShips = 5;
+    domManager.updateScore(playerShips, computerShips);
     initializeGame();
   };
 

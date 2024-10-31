@@ -1,5 +1,8 @@
 // domManager.js
 const domManager = (() => {
+  const maxMessages = 4; // Keep track of last 4 messages
+  const messageHistory = [];
+
   const createBoard = () => {
     const playerBoard = document.getElementById("player-gameboard");
     const opponentBoard = document.getElementById("opponent-gameboard");
@@ -77,9 +80,70 @@ const domManager = (() => {
   };
 
   const displayMessage = (message) => {
-    const messageElement = document.querySelector(".message-display");
-    if (messageElement) {
-      messageElement.textContent = message;
+    // Add new message to the end of the array
+    messageHistory.push(message);
+
+    // Keep only the most recent messages, removing the oldest if limit is exceeded
+    if (messageHistory.length > maxMessages) {
+      messageHistory.shift();
+    }
+
+    // Get or create the message container
+    let container = document.querySelector(".message-display");
+    if (!container) {
+      container = createMessageContainer();
+      if (!container) return; // Exit if we couldn't find or create the container
+    }
+
+    // Clear current messages
+    container.innerHTML = "";
+
+    // Add all messages, styling based on age
+    messageHistory.forEach((msg, index) => {
+      const messageElement = document.createElement("div");
+      messageElement.textContent = msg;
+      messageElement.classList.add("game-message");
+
+      // Style based on message age
+      if (index === messageHistory.length - 1) {
+        // Newest message (at the end)
+        messageElement.style.cssText = `
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #1a1a1a;
+          transition: all 0.3s ease;
+        `;
+      } else if (index === messageHistory.length - 2) {
+        // Second newest message
+        messageElement.style.cssText = `
+          font-size: 1rem;
+          color: #ababab;
+          transition: all 0.3s ease;
+        `;
+      } else {
+        // Older messages
+        messageElement.style.cssText = `
+          font-size: 0.875rem;
+          color: #ababab;
+          transition: all 0.3s ease;
+        `;
+      }
+
+      // Append each message element to the container
+      container.appendChild(messageElement);
+    });
+  };
+
+  const updateScore = (playerShips, opponentShips) => {
+    const playerScoreElement = document.getElementById("player-score");
+    const opponentScoreElement = document.getElementById("opponent-score");
+
+    console.log("playerScore", playerShips);
+    console.log("opponentScore", opponentShips);
+
+    if (playerScoreElement && opponentScoreElement) {
+      playerScoreElement.textContent = `Ships remaining: ${playerShips}`;
+      opponentScoreElement.textContent = `Ships remaining: ${opponentShips}`;
     }
   };
 
@@ -155,6 +219,7 @@ const domManager = (() => {
     displayMessage,
     addAttackHandler,
     showGameOver,
+    updateScore,
   };
 })();
 

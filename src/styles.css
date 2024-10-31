@@ -2,6 +2,18 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 /* Container for message and gameboards */
@@ -18,7 +30,7 @@
 .message-display {
   text-align: center;
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 500;
   color: #333;
   margin-bottom: 1rem;
 }
@@ -65,4 +77,29 @@
 }
 .cell.miss {
   background-color: #98999b;
+}
+
+#message-history {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-display {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.game-message {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  line-height: 1.4;
+}
+
+.game-message:hover {
+  background-color: #f0f0f0;
 }
